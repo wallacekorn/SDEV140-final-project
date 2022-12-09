@@ -4,20 +4,28 @@ Date: 12/05/2022
 Class: SDEV 140 - Introduction to Software Development
 Program Purpose: Input Calorie consumption and expense - return daily calorie totals
 
+Sources:
+Images were sourced from https://clipartix.com/
+
+Calorie data was sourced from the following:
+https://sites.google.com/site/compendiumofphysicalactivities/tracking-guide
+https://www.sportsrec.com/3201468/how-to-calculate-calories-burned
+
 """
 from breezypythongui import *
 import tkinter as tk
-root = tk
+TkinterVar = tk
 calorieOutputSum = 0
 userTimeInHours = 0.0
 optionSelectedValue = 0.0
 wasNotDigit = False
+grandTotalInput = 0
 
 class MainClass(EasyFrame):
     """docstring"""
     def __init__(self):
-        """docstring"""
-        EasyFrame.__init__(self, title = "Calorie Calculator", width = 600, height = 500, resizable= False, background="#0069cc")
+        """Main window function - operates the GUI's infinite loop"""
+        EasyFrame.__init__(self, title = "Calorie Calculator", width = 620, height = 500, resizable= False, background="#0069cc")
         self.columnconfigure(0, minsize=100)
         self.rowconfigure(0, minsize=5)
         self.columnconfigure(1, minsize=100)
@@ -30,14 +38,28 @@ class MainClass(EasyFrame):
         self.rowconfigure(4, minsize=5)
         self.columnconfigure(5, minsize=100)
         self.rowconfigure(5, minsize=5)
+        self.columnconfigure(6, minsize=20)
+        self.rowconfigure(6, minsize=5)
 
-        #Headline
-        self.addLabel(text = "Welcome!",background="#0069cc", row = 0, column = 2, columnspan=2, sticky="s")
+        # Headline image
+        imageLabel = self.addLabel(text="", row=0, column=2, columnspan =2, rowspan=1, sticky="nsew")
+        self.image = TkinterVar.PhotoImage(file="homeveggies.gif")
+        imageLabel["image"] = self.image
+        imageLabel.grid(sticky="nsew")
+        imageLabel.config(bg="#0069cc")
 
-        # Temporary, just feeling out the layout until i split the windows
-        self.addLabel(text = "Total In", row = 2, column = 1, columnspan=1,background="#0069cc", sticky="w")
-        self.addLabel(text = "Total Out", row = 2, column = 3, columnspan=1,background="#0069cc", sticky="e")
-        self.addLabel(text = "Total Left", row = 1, column = 2, columnspan=2,background="#0069cc", sticky="s")
+        # Total boxes
+        self.totalCaloriesConsumedField = self.addTextField(text="0", row=1, column=1, columnspan=1, sticky="nsew")
+        self.totalCaloriesConsumedField.configure(justify="center", bg="#5289ee", bd=3)
+        self.addLabel(text = "Total Calories In", row = 2, column = 1, columnspan=1,background="#0069cc", sticky="wn")
+        self.totalCaloriesConsumedField.config(state=DISABLED) # Disables the field so the user can't update directly
+        self.totalCaloriesConsumedField.configure({"disabledbackground": "#5289ee", "disabledforeground": "#000000"}) # corrects the colors of the disabled field
+
+        self.addLabel(text = "Total Calories Out", row = 2, column = 4, columnspan=1, background="#0069cc", sticky="ne")
+        self.totalCaloriesExercisedField = self.addTextField(text="0", row=1, column=4, columnspan=1, sticky="nswe")
+        self.totalCaloriesExercisedField.configure(justify="center",bg="#5289ee", bd=3)
+        self.totalCaloriesExercisedField.config(state=DISABLED) # Disables the field so the user can't update directly
+        self.totalCaloriesExercisedField.configure({"disabledbackground": "#5289ee", "disabledforeground": "#000000"}) # corrects the colors of the disabled field
 
         # Input and Labels for food calories
         self.addLabel(text = "Breakfast: ", row = 3, column = 0, columnspan=1,background="#0069cc", sticky="ne")
@@ -52,7 +74,8 @@ class MainClass(EasyFrame):
         self.addLabel(text = "Snacks: ", row = 6, column = 0, columnspan=1,background="#0069cc", sticky="ne")
         self.snacksInputField = self.addTextField(text="", row=6, column=1, columnspan=1)
 
-        self.sumOfFoodsButton = self.addButton(text = " Add food together", row = 7,\
+        # Add input calories together button
+        self.sumOfFoodsButton = self.addButton(text = " Add Food Together", row = 7,\
                                  column = 0, command = self.addsCalorieInput, columnspan=2)
         self.sumOfFoodsButton.grid(sticky="ne")
 
@@ -60,20 +83,20 @@ class MainClass(EasyFrame):
         # User Weight field and label
         self.addLabel(text = "User Weight (Lbs)", row = 3, column = 2, columnspan=2,background="#0069cc", sticky="e")
         self.weightTextField = self.addTextField(text="", row=3, column=4, columnspan=1, sticky="w", state="normal", width= 20)
-
+        
         # User Weight Lock-in Button Function
         def userWeightLockIn():
             """docstring"""           
             global userWeightStored
             if self.weightTextField.get().isdigit() == False:                
-                self.labelVar = self.addLabel(text = "Must be an Integer", row = 3, column = 2, columnspan=2, background="red", sticky="se")
+                self.labelVar = self.addLabel(text = "Must be an Integer   ⇓⇓", row = 2, column = 3, columnspan=2, background="red", sticky="news")
                 global wasNotDigit
                 wasNotDigit = True
             else:
                 if wasNotDigit == True:
                     self.labelVar.grid_remove()
                 userWeightStored = int(self.weightTextField.get()) # Stores the entered information in a global variable
-                print(userWeightStored)
+                print(str(userWeightStored) + " userWeightStored")
                 currentFieldState = self.weightTextField["state"]
                 if currentFieldState == 'disabled':                 # if current state is disabled, it enables the button on press
                     self.weightTextField.configure(state="normal")
@@ -93,6 +116,7 @@ class MainClass(EasyFrame):
         self.addLabel(text = "Exercise (Minutes)", row = 4, column = 2, columnspan=2,background="#0069cc", sticky="e")
         self.exerciseTextField = self.addTextField(text="", row=4, column=4, columnspan=1, sticky="w")
         print(str(optionSelectedValue) + " initial optionSelectedValue")
+
         def exerciseTextFieldButtonFunction():
             """docstring"""
             global userTimeInHours
@@ -116,7 +140,11 @@ class MainClass(EasyFrame):
                 print(str(userTimeInHours) + " userTimeInHours")
                 singleExerciseSum = ((userWeightStored/2.2) * optionSelectedValue) * userTimeInHours
                 calorieOutputSum += singleExerciseSum
-                print(str(calorieOutputSum) + " Calorie Output Sum singleexercisesum")
+                print(str(singleExerciseSum) + " Single Exercise Sum")
+                print(str(calorieOutputSum) + " Calorie Output Sum")
+                self.totalCaloriesExercisedField.config(state=NORMAL)
+                self.totalCaloriesExercisedField.setText(int(round(calorieOutputSum)))
+                self.totalCaloriesExercisedField.config(state=DISABLED)
             enteredMinutesOfExercise = self.exerciseTextField.get()
             self.exerciseTextField.setText("")
             userTimeInHours = round(int(enteredMinutesOfExercise) / 60,2)
@@ -164,33 +192,104 @@ class MainClass(EasyFrame):
             """Closes the Application on execution"""
             self.quit()
         self.exitButton = self.addButton(text = "Exit the Program", row = 0,\
-                                 column = 5, command = close)
+                                 column = 5, columnspan=2, command = close)
         self.exitButton.grid(sticky="nw")
 
 # dropdown menu
-        optionSelected = root.StringVar()
+        optionSelected = TkinterVar.StringVar()
         optionSelected.set("Click to Choose")
-        drop = root.OptionMenu(self, optionSelected, *exerciseOptions, command = dropDownItemWasSelected)
+        drop = TkinterVar.OptionMenu(self, optionSelected, *exerciseOptions, command = dropDownItemWasSelected)
         drop.grid(row = 5, column = 3, sticky = "en", pady = 2, columnspan=2)
         drop.config(width = 14, bg="#0069cc", borderwidth=0)
        
+
+# Final Results Button
+        def finalWindow():
+            global calorieInputSum
+            global calorieOutputSum
+
+            newWindow = TkinterVar.Toplevel(self) # creates a new window
+            newWindow.geometry("500x250")
+            newWindow.title("Final Result")
+            newWindow.grab_set() # makes sure the master window cant be interacted with while the results window is open
+            
+            # Grid for the final window
+            newWindow.columnconfigure(0, minsize=100)
+            newWindow.rowconfigure(0, minsize=50)
+            newWindow.columnconfigure(1, minsize=100)
+            newWindow.rowconfigure(1, minsize=50)
+            newWindow.columnconfigure(2, minsize=100)
+            newWindow.rowconfigure(2, minsize=50)
+            newWindow.columnconfigure(3, minsize=100)
+            newWindow.rowconfigure(3, minsize=50)
+            newWindow.columnconfigure(4, minsize=100)
+            newWindow.rowconfigure(4, minsize=50)
+            
+            # Final Results Output
+            aboveResultsOutput = TkinterVar.Label(newWindow, text="Calories Remaining")
+            aboveResultsOutput.grid(row = 4, column = 1, sticky = "", columnspan=1, rowspan=1)
+            finalResultsOutput = TkinterVar.Label(newWindow, text="0")
+            finalResultsOutput.grid(row = 4, column = 2, sticky = "", columnspan=1, rowspan=1)
+
+            try: # input validation for testing
+                calorieInputSum
+            except NameError:
+                calorieInputSum = 0
+            finalResultsOutput["text"] = str((int(calorieOutputSum) + 2000) - int(calorieInputSum))
+
+            # Exit Button
+            exitButton = TkinterVar.Button(newWindow, text='Close Window', command=newWindow.destroy)
+            exitButton.grid(row = 4, column = 4, sticky = W)
+
+            # Image
+            heartImageContainer = TkinterVar.Label(newWindow, text="")
+            self.imageFinale = TkinterVar.PhotoImage(file="heartperson.gif")
+            heartImageContainer["image"] = self.imageFinale
+            heartImageContainer.config(bg="#0069cc", justify="center", width=500)
+            heartImageContainer.grid(row = 0, column = 0, sticky = "nsew", pady = 2, columnspan=5, rowspan=4)
+
+        self.finalWindowButton = self.addButton(text = "Calculate Total", row = 1,\
+                                    column = 2, columnspan=2,command = finalWindow)
+        
+
+
+
 # Adds all the 4 Meal Calorie boxes together when pressed
     def addsCalorieInput(self):
         """adds the 4 calorie input boxes together"""
-        #need to test for non-entrys and fill in with 0's
         global calorieInputSum
-        calorieInputSum = int(self.breakfastInputField.getText()) + int(self.lunchInputField.getText()) + int(self.dinnerInputField.getText()) + int(self.snacksInputField.getText())
+        calorieInputSum=0
+        breakfastNoms = self.breakfastInputField.getText()
+        lunchNoms = self.lunchInputField.getText()
+        dinnerNoms = self.dinnerInputField.getText()
+        snacksNoms = self.snacksInputField.getText()
+
+        #replaces nulls with 0's for processing
+        if breakfastNoms == "" or breakfastNoms.isdigit() != True:
+            self.breakfastInputField.setText(0)
+            breakfastNoms = self.breakfastInputField.getText()
+        if lunchNoms == "" or lunchNoms.isdigit() != True:
+            self.lunchInputField.setText(0)
+            lunchNoms = self.lunchInputField.getText()
+        if dinnerNoms == "" or dinnerNoms.isdigit() != True:
+            self.dinnerInputField.setText(0)
+            dinnerNoms = self.dinnerInputField.getText()
+        if snacksNoms == "" or snacksNoms.isdigit() != True:
+            self.snacksInputField.setText(0)
+            snacksNoms = self.snacksInputField.getText()
+        calorieInputSum = int(breakfastNoms) + int(lunchNoms) + int(dinnerNoms) + int(snacksNoms)
+
+        if calorieInputSum != 0:
+            self.sumOfFoodsButton["text"] = "Press Again to Clear"
+        if calorieInputSum == 0:
+            self.sumOfFoodsButton["text"] = "Add Food Together"
         self.breakfastInputField.setText("")
         self.lunchInputField.setText("") # Clears the fields so the user can tell they successfully submitted
         self.dinnerInputField.setText("")
         self.snacksInputField.setText("")
-
-# Calorie calculator Function (input minus output)
-    def finalSummation(calorieInputSum, calorieOutputSum):
-        """Takes the calorie output sum and calorie input sum and combines them, adding in the estimated 2000 calories a day from BMR"""
-        return (calorieOutputSum + 2000) - calorieInputSum # could make this 2000 calorie thing a changable variable if there is time
-
-
+        self.totalCaloriesConsumedField.config(state=NORMAL)
+        self.totalCaloriesConsumedField.setText(calorieInputSum) # sets the banner text to the total sum
+        self.totalCaloriesConsumedField.config(state=DISABLED)
 
 # Code Below Operates the GUI infinite loop
 def main():
