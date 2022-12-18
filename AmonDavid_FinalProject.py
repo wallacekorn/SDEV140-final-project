@@ -14,10 +14,10 @@ https://www.healthline.com/nutrition/2000-calorie-diet
 """
 from breezypythongui import *       # Imports the modules used for the GUI
 import tkinter as tk                # Imports the modules used for the GUI
-from tkinter import font            # Imports the font module so improved font's can be applied
+from tkinter import font            # Imports the font module so improved fonts can be applied
 
-calorieOutputSum = 0                # Exercise'd calories overall sum holder
-userTimeInHours = 0.0               # Stores the users input time in hours
+calorieOutputSum = 0                # Exercised calories overall sum holder
+userTimeInHours = 0.0               # Stores the user's input time in hours
 optionSelectedValue = 0.0           # Assigns a value to the initial key in the dropdown menu
 wasNotDigit = False                 # a flag for toggling a label
 grandTotalInput = 0                 # final results grand total holder
@@ -49,7 +49,7 @@ class MAIN_CLASS(EasyFrame):
         self.image = tk.PhotoImage(file="homeveggies.gif")         # headline image stored in a variable
         imageLabel["image"] = self.image                           # assigns the image variable to the label containter
         imageLabel.grid(sticky="nsew")                             # grid styling for image container
-        imageLabel.config(bg="#0069cc")                            # changes the containers background color to match the rest of the app
+        imageLabel.config(bg="#0069cc")                            # changes the container's background color to match the rest of the app
 
         # Directions Button and Window
         def jumpToDirections():
@@ -57,7 +57,7 @@ class MAIN_CLASS(EasyFrame):
             directionsWindow = tk.Toplevel()                            # Creates directions window
             directionsWindow.geometry("500x450")                        # Sets the window dimensions
             directionsWindow.title("Directions")                        # Sets the window title bar text
-            directionsWindow.grab_set()                                 # Makes sure the master window cant be interacted with while the directions window is open
+            directionsWindow.grab_set()                                 # Makes sure the master window can't be interacted with while the directions window is open
             directionsWindow.resizable(height = False, width = False)   # Prevents the Directions window from being resized
             directionsWindow.configure( bg="#0069cc")                   # sets the background color for the window
             
@@ -100,7 +100,7 @@ class MAIN_CLASS(EasyFrame):
         # Where to Begin - entirely too obvious arrow
         arrowImageContainer = self.addLabel(text = "", row = 0, column = 5, rowspan = 4, columnspan=2, background="#0069cc", sticky="w") # creates a container to hold the arrow image
         self.imageArrow = tk.PhotoImage(file="arrow.png")                                # Image set to a variable
-        arrowImageContainer["image"] = self.imageArrow                                   # Sets the labels image property to the image variable
+        arrowImageContainer["image"] = self.imageArrow                                   # Sets the label's image property to the image variable
 
         # Input and Labels for food calories
         self.addLabel(text = "Breakfast: ", row = 3, column = 0, columnspan=1,background="#0069cc", sticky="ne")
@@ -123,8 +123,8 @@ class MAIN_CLASS(EasyFrame):
 
 # Calorie Output Fields
         # User Weight field and label
-        self.addLabel(text = "User Weight (Lbs)", row = 3, column = 2, columnspan=2,background="#0069cc", sticky="e")
-        self.weightTextField = self.addTextField(text="", row=3, column=4, columnspan=1, sticky="w", state="normal", width= 20)
+        self.addLabel(text = "User Weight (Lbs)", row = 3, column = 2, columnspan=2,background="#0069cc", sticky="e")           # adds label
+        self.weightTextField = self.addTextField(text="", row=3, column=4, columnspan=1, sticky="w", state="normal", width= 20) # adds text field
         
         # User Weight Lock-in Button Function
         def userWeightLockIn():
@@ -140,7 +140,7 @@ class MAIN_CLASS(EasyFrame):
                 userWeightStored = int(self.weightTextField.get())       # Stores the entered information in a global variable
                 arrowImageContainer.grid_remove()
                 self.finalWindowButton.config(state=DISABLED)            ##
-                self.singleExerciseSubmitButton.config(state=DISABLED)   # Disables the input submit buttons if user weight button is pressed to unlocked
+                self.singleExerciseSubmitButton.config(state=DISABLED)   # Disables the input submit buttons if user weight button is pressed to unlock
                 self.sumOfFoodsButton.config(state=DISABLED)             ## (they are initiated and then immediately disabled to begin with)
 
                 currentFieldState = self.weightTextField["state"]        # stores the field state in a variable for comparison
@@ -187,14 +187,14 @@ class MAIN_CLASS(EasyFrame):
                 print(calorieOutputSum)
 
                 self.totalCaloriesExercisedField.config(state=NORMAL)                   # toggles the field's state while being updated
-                self.totalCaloriesExercisedField.setText(int(calorieOutputSum))       # updates the field with the total exercise calorie sum
+                self.totalCaloriesExercisedField.setText(int(calorieOutputSum))         # updates the field with the total exercise calorie sum
                 self.totalCaloriesExercisedField.config(state=DISABLED)                 # toggles the field's state while being updated
 
             def timeConverter(enteredMinutesOfExercise):                                # Input validation for the exercise minutes input
                 """Takes the exercise minutes entered and validates them, then returns the exercise in a rounded integer"""
                 if enteredMinutesOfExercise.isdigit() == True:
                     print (str(enteredMinutesOfExercise))
-                    return round(int(enteredMinutesOfExercise) / 60,2)                  # if the entered value is an integer it converts the minutes to hours, rounds for appearance, and returns
+                    return round(int(enteredMinutesOfExercise) / 60,2)                  # if the entered value is an integer, it converts the minutes to hours, rounds for appearance, and returns
                 else:
                     self.exerciseTextField.setText("")                      # If the entered value is not a digit, it returns 0 so the total is unaffected - input validation
                     return 0
@@ -206,7 +206,7 @@ class MAIN_CLASS(EasyFrame):
         # Exercise "Add to total" button
         self.singleExerciseSubmitButton = self.addButton(text = "Add to Total", row = 4, column = 5, command = exerciseTextFieldButtonFunction, columnspan=1)
         self.singleExerciseSubmitButton.grid(sticky="e")        # grid positioning and style
-        self.singleExerciseSubmitButton["width"] = 20           # sets the buttons width
+        self.singleExerciseSubmitButton["width"] = 20           # sets the button's width
         self.singleExerciseSubmitButton.config(state=DISABLED)  # Initializes disabled until user weight is locked in
 
         # Exercise Names stored in a list for the dropdown menu
@@ -246,13 +246,13 @@ class MAIN_CLASS(EasyFrame):
 # Exit Program Button - Function and Button
         def close():
             """Closes the Application on execution"""
-            self.quit() # quits the window
+            self.quit()                                     # quits the window
         self.exitButton = self.addButton(text = "Exit the Program", row = 0, column = 5, columnspan=2, command = close) # initializes the button
         self.exitButton.grid(sticky="nw")                   # grid styling
 
 # Dropdown menu
         optionSelected = tk.StringVar()                                          # Assigns the string data type to the dropdown menu object
-        optionSelected.set("Click to Choose")                                    # Sets the initial value of the dropdown text (what appears when its unclicked)
+        optionSelected.set("Click to Choose")                                    # Sets the initial value of the dropdown text (what appears when it's unclicked)
         drop = tk.OptionMenu(self, optionSelected, *exerciseOptions, command = dropDownItemWasSelected) # builds the dropdown menu
         drop.grid(row = 5, column = 3, sticky = "en", columnspan=2)              # grid settings for the dropdown menu
         drop.config(width = 14, bg="#0069cc", borderwidth=0)                     # style for the dropdown menu
@@ -263,7 +263,7 @@ class MAIN_CLASS(EasyFrame):
             self.totalCaloriesExercisedField.setText("0") # if selected it sets the total exercise output text field to 0
             global calorieOutputSum     # brings the value inside the function
             calorieOutputSum = 0        # clears the total so the application can be restarted
-        clearButton = self.addButton(text = "Clear Total", row = 5, column = 5, command=clearButton) # declares teh button
+        clearButton = self.addButton(text = "Clear Total", row = 5, column = 5, command=clearButton) # declares the button
         clearButton.grid(sticky = "nw")    # grid settings for the clear button menu
 
 # Final Results Button(Window) - Function and Button
@@ -310,7 +310,7 @@ class MAIN_CLASS(EasyFrame):
             # Final Results Image
             heartImageContainer = tk.Label(resultsWindow, text="")                                      # Image label container created
             self.imageFinale = tk.PhotoImage(file="heartperson.gif")                                    # Image set to a variable
-            heartImageContainer["image"] = self.imageFinale                                             # Sets the labels image property to the image variable
+            heartImageContainer["image"] = self.imageFinale                                             # Sets the label's image property to the image variable
             heartImageContainer.config(bg="#0069cc", justify="center", width=500)                       # Styling for the container
             heartImageContainer.grid(row = 0, column = 0, sticky = "nsew", columnspan=5, rowspan=4)     # grid positioning for the container
 
